@@ -37,7 +37,7 @@ pipeline {
             steps {
                 sh '''
                 sleep 10
-                'curl http://localhost:5001'
+                curl http://localhost:5001
                 '''
             }
         }
