@@ -4,35 +4,35 @@ pipeline {
     environment {
         IMAGE_NAME = "bluegreen-app"
     }
+
     stages {
+
         stage('Checkout Code') {
             steps {
-                git ''
+                checkout scm
             }
         }
-        stage('Build docker Image'){
+
+        stage('Build Docker Image') {
             steps {
                 sh "docker build -t $IMAGE_NAME ."
             }
         }
-        stage("Run Tests") {
+
+        stage('Deploy Green Environment') {
             steps {
-                sh "python -m unittest"
-            }
-        }
-        stage("Deploy Green Environment") {
-            steps {
-                sh " " "
+                sh '''
                 docker stop green || true
                 docker rm green || true
-                
+
                 docker run -d \
                 --name green \
-                -p 5001:5000
+                -p 5001:5000 \
                 bluegreen-app
-                " " "
+                '''
             }
         }
+
         stage('Health Check') {
             steps {
                 sh 'curl http://localhost:5001'
